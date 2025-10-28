@@ -22,7 +22,7 @@ pipeline {
 
         stage('Build Docker Images') {
             steps {
-                dir('Movie-App-master') {
+                dir('Movie-App') {
                     echo 'Building Docker images...'
                     sh 'docker-compose -f docker-compose.yml build'
                 }
@@ -31,7 +31,7 @@ pipeline {
 
         stage('Push to DockerHub') {
             steps {
-                dir('Movie-App-master') {
+                dir('Movie-App') {
                     echo 'Pushing Docker images to DockerHub...'
                     sh '''
                         echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
