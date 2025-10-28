@@ -50,16 +50,16 @@ pipeline {
 
     post {
         success {
-            echo '✅ Pipeline succeeded! React app deployed using Docker Compose.'
+            echo ' Pipeline succeeded! React app deployed using Docker Compose.'
             mail to: 'gopinathgopinath0154@gmail.com',
-                 subject: "✅ Jenkins SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 subject: " Jenkins SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "The Jenkins build was successful.\n\nView details: ${env.BUILD_URL}"
         }
 
         failure {
-            echo '❌ Pipeline failed!'
+            echo ' Pipeline failed!'
             mail to: 'gopinathgopinath0154@gmail.com',
-                 subject: "❌ Jenkins FAILED - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 subject: "Jenkins FAILED - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "The Jenkins build failed.\n\nCheck logs: ${env.BUILD_URL}"
         }
     }
