@@ -4,6 +4,7 @@ services:
   movie-frontend:
     build: .
     container_name: movie-frontend
+    image: gopinathgb/frontend-movie:latest
     ports:
       - "3000:80"
     restart: always
