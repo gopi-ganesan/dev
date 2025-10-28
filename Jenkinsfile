@@ -13,8 +13,8 @@ pipeline {
             steps {
                 echo 'Checking out code from GitHub...'
                 git(
-                    url: 'https://github.com/gopi-ganesan/pipeline.git',
-                    branch: 'main',
+                    url: 'https://github.com/gopi-ganesan/dev.git',
+                    branch: 'master',
                     credentialsId: 'github-token'
                 )
             }
@@ -59,14 +59,14 @@ pipeline {
     post {
         success {
             echo 'The pipeline has succeeded!'
-            mail to: 'your_email@example.com',
+            mail to: 'gopinathgopinath0154@gmail.com',
                  subject: " Jenkins SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "The Jenkins build was successful.\n\nView details: ${env.BUILD_URL}"
         }
 
         failure {
             echo 'The pipeline has failed!'
-            mail to: 'your_email@example.com',
+            mail to: 'gopinathgopinath0154@gmail.com',
                  subject: " Jenkins FAILED - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "The Jenkins build failed.\n\nCheck logs: ${env.BUILD_URL}"
         }
