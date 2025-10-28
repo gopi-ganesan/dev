@@ -22,16 +22,13 @@ pipeline {
 
         stage('Build Docker Images') {
             steps {
-                dir('Movie-App') {
                     echo 'Building Docker images...'
                     sh 'docker-compose -f docker-compose.yml build'
-                }
             }
         }
 
         stage('Push to DockerHub') {
             steps {
-                dir('Movie-App') {
                     echo 'Pushing Docker images to DockerHub...'
                     sh '''
                         echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
@@ -42,16 +39,13 @@ pipeline {
                         docker push ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:M2
                         docker push ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:M2
                     '''
-                }
             }
         }
 
         stage('Deploy Containers') {
             steps {
-                dir('Movie-App-master') {
                     echo 'Deploying containers using docker-compose...'
                     sh 'docker-compose -f docker-compose.yml up -d'
-                }
             }
         }
     }
