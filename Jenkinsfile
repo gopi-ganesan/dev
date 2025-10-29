@@ -23,7 +23,8 @@ pipeline {
         stage('Build Docker Image with Compose') {
             steps {
                 echo 'Building Docker image using docker-compose...'
-                sh 'docker-compose build'
+                sh 'docker-compose -f docker-compose.yaml build'
+                sh "docker tag ${IMAGE_NAME}:${TAG} ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${TAG}"
             }
         }
 
@@ -41,8 +42,8 @@ pipeline {
             steps {
                 echo 'Deploying container using docker-compose...'
                 sh '''
-                    docker-compose down
-                    docker-compose up -d
+                    docker-compose -f docker-compose.yaml down
+                    docker-compose -f docker-compose.yaml up -d
                 '''
             }
         }
@@ -50,18 +51,11 @@ pipeline {
 
     post {
         success {
-            echo ' Pipeline succeeded! React app deployed using Docker Compose.'
-            mail to: 'gopinathgopinath0154@gmail.com',
-                 subject: " Jenkins SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: "The Jenkins build was successful.\n\nView details: ${env.BUILD_URL}"
+            echo 'Pipeline succeeded! React app deployed using Docker Compose.'
         }
 
         failure {
-            echo ' Pipeline failed!'
-            mail to: 'gopinathgopinath0154@gmail.com',
-                 subject: "Jenkins FAILED - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: "The Jenkins build failed.\n\nCheck logs: ${env.BUILD_URL}"
+            echo 'Pipeline failed!'
         }
     }
 }
-
