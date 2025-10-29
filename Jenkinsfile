@@ -5,7 +5,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
         DOCKERHUB_USERNAME = "gopinathgb"
         IMAGE_NAME = "frontend-movie"
-        TAG = "c4"
+        TAG = "c5"
         IMAGE_FULL_LATEST = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest"
         IMAGE_FULL_TAGGED = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${TAG}"
     }
@@ -25,7 +25,7 @@ pipeline {
         stage('Build with Compose') {
             steps {
                 echo 'Building Docker image with docker-compose...'
-                sh 'docker-compose -f docker-compose.yml build'
+                sh "docker build -t ${IMAGE_FULL_LATEST} ."
             }
         }
 
