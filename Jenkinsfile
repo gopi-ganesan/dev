@@ -52,7 +52,7 @@ pipeline {
                 echo 'Deploying with docker-compose...'
                 sh '''
                   docker-compose -f docker-compose.yml down || true
-                  docker-compose -f /path/to/docker-compose.yml up -d
+                  docker-compose -f docker-compose.yml up -d
                 '''
             }
         }
