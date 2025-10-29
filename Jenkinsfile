@@ -23,7 +23,7 @@ pipeline {
         stage('Build Docker Image with Compose') {
             steps {
                 echo 'Building Docker image using docker-compose...'
-                sh 'docker-compose -f docker-compose.yaml build'
+                sh 'docker-compose -f docker-compose.yml build'
                 sh "docker tag ${IMAGE_NAME}:${TAG} ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${TAG}"
             }
         }
@@ -42,8 +42,8 @@ pipeline {
             steps {
                 echo 'Deploying container using docker-compose...'
                 sh '''
-                    docker-compose -f docker-compose.yaml down
-                    docker-compose -f docker-compose.yaml up -d
+                    docker-compose -f docker-compose.yml down
+                    docker-compose -f docker-compose.yml up -d
                 '''
             }
         }
