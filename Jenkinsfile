@@ -1,11 +1,13 @@
 pipeline {
-    agent any
+    agent { label 'dev' }
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
         DOCKERHUB_USERNAME = "gopinathgb"
         IMAGE_NAME = "frontend-movie"
         TAG = "c4"
+        IMAGE_FULL_LATEST = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest"
+        IMAGE_FULL_TAGGED = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${TAG}"
     }
 
     stages {
@@ -20,42 +22,44 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image with Compose') {
+        stage('Build with Compose') {
             steps {
-                echo 'Building Docker image using docker-compose...'
+                echo 'Building Docker image with docker-compose...'
                 sh 'docker-compose -f docker-compose.yml build'
-                sh "docker tag ${IMAGE_NAME}:${TAG} ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${TAG}"
             }
         }
 
-        stage('Push to DockerHub') {
+        stage('Tag image') {
             steps {
-                echo 'Pushing image to DockerHub...'
+                echo "Tagging image ${IMAGE_FULL_LATEST} -> ${IMAGE_FULL_TAGGED}"
+                sh "docker tag ${IMAGE_FULL_LATEST} ${IMAGE_FULL_TAGGED} || true"
+            }
+        }
+
+        stage('Login & Push') {
+            steps {
+                echo 'Logging into Docker Hub and pushing images...'
                 sh '''
-                    echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
-                    docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${TAG}
+                  echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
+                  docker push ${IMAGE_FULL_LATEST} || true
+                  docker push ${IMAGE_FULL_TAGGED}
                 '''
             }
         }
 
-        stage('Deploy Container') {
+        stage('Deploy with Compose') {
             steps {
-                echo 'Deploying container using docker-compose...'
+                echo 'Deploying with docker-compose...'
                 sh '''
-                    docker-compose -f docker-compose.yml down
-                    docker-compose -f docker-compose.yml up -d
+                  docker-compose -f docker-compose.yml down || true
+                  docker-compose -f docker-compose.yml up -d
                 '''
             }
         }
     }
 
     post {
-        success {
-            echo 'Pipeline succeeded! React app deployed using Docker Compose.'
-        }
-
-        failure {
-            echo 'Pipeline failed!'
-        }
+        success { echo 'Pipeline succeeded — app deployed.' }
+        failure { echo 'Pipeline failed — check logs.' }
     }
 }
