@@ -5,7 +5,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
         DOCKERHUB_USERNAME = "gopinathgb"
         IMAGE_NAME = "frontend-movie"
-        TAG = "c3"
+        TAG = "c4"
     }
 
     stages {
